@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ZhishiDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.zhishi_name as zhishiName
+        ,a.zhishi_photo as zhishiPhoto
+        ,a.zhishi_video as zhishiVideo
+        ,a.zan_number as zanNumber
+        ,a.cai_number as caiNumber
+        ,a.zhishi_types as zhishiTypes
+        ,a.zhishi_clicknum as zhishiClicknum
+        ,a.zhishi_content as zhishiContent
+        ,a.shangxia_types as shangxiaTypes
+        ,a.zhishi_delete as zhishiDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.ZhishiView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM zhishi  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.zhishiName != '' and params.zhishiName != null and params.zhishiName != 'null' ">
+                and a.zhishi_name like CONCAT('%',#{params.zhishiName},'%')
+            </if>
+            <if test=" params.zhishiVideo != '' and params.zhishiVideo != null and params.zhishiVideo != 'null' ">
+                and a.zhishi_video like CONCAT('%',#{params.zhishiVideo},'%')
+            </if>
+            <if test="params.zanNumberStart != null and params.zanNumberStart != ''">
+                <![CDATA[  and a.zan_number >= #{params.zanNumberStart}   ]]>
+            </if>
+            <if test="params.zanNumberEnd != null and params.zanNumberEnd != ''">
+                <![CDATA[  and a.zan_number <= #{params.zanNumberEnd}   ]]>
+            </if>
+             <if test="params.zanNumber != null and params.zanNumber != ''">
+                and a.zan_number = #{params.zanNumber}
+             </if>
+            <if test="params.caiNumberStart != null and params.caiNumberStart != ''">
+                <![CDATA[  and a.cai_number >= #{params.caiNumberStart}   ]]>
+            </if>
+            <if test="params.caiNumberEnd != null and params.caiNumberEnd != ''">
+                <![CDATA[  and a.cai_number <= #{params.caiNumberEnd}   ]]>
+            </if>
+             <if test="params.caiNumber != null and params.caiNumber != ''">
+                and a.cai_number = #{params.caiNumber}
+             </if>
+            <if test="params.zhishiTypes != null and params.zhishiTypes != ''">
+                and a.zhishi_types = #{params.zhishiTypes}
+            </if>
+            <if test="params.zhishiClicknumStart != null and params.zhishiClicknumStart != ''">
+                <![CDATA[  and a.zhishi_clicknum >= #{params.zhishiClicknumStart}   ]]>
+            </if>
+            <if test="params.zhishiClicknumEnd != null and params.zhishiClicknumEnd != ''">
+                <![CDATA[  and a.zhishi_clicknum <= #{params.zhishiClicknumEnd}   ]]>
+            </if>
+             <if test="params.zhishiClicknum != null and params.zhishiClicknum != ''">
+                and a.zhishi_clicknum = #{params.zhishiClicknum}
+             </if>
+            <if test=" params.zhishiContent != '' and params.zhishiContent != null and params.zhishiContent != 'null' ">
+                and a.zhishi_content like CONCAT('%',#{params.zhishiContent},'%')
+            </if>
+            <if test="params.shangxiaTypes != null and params.shangxiaTypes != ''">
+                and a.shangxia_types = #{params.shangxiaTypes}
+            </if>
+            <if test="params.zhishiDeleteStart != null and params.zhishiDeleteStart != ''">
+                <![CDATA[  and a.zhishi_delete >= #{params.zhishiDeleteStart}   ]]>
+            </if>
+            <if test="params.zhishiDeleteEnd != null and params.zhishiDeleteEnd != ''">
+                <![CDATA[  and a.zhishi_delete <= #{params.zhishiDeleteEnd}   ]]>
+            </if>
+             <if test="params.zhishiDelete != null and params.zhishiDelete != ''">
+                and a.zhishi_delete = #{params.zhishiDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
